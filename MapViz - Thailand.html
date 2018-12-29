@@ -1,0 +1,154 @@
+<html>
+
+<head>
+    <!-- 	Created by Leo L.
+			Last modified by Siraprapa W.
+			
+			Change Logs
+			===========
+			Refactoring the <head>, removed unused js libary.
+			Move setting parameters to the top
+			Optimize colorbrew settings/coding
+			Remove unsued code
+			Re-alight/indent code
+			Change accessToken/mapbox to ageas coe token
+			Extend the capability : theme, targetvariable
+			Move some scripts to seperated css/js files
+			
+			Learning Resources
+			==================
+			Complete leaflets tutorial: https://www.youtube.com/watch?v=SCAqyPfwzcU
+			Leaflet.js - Interactive Choropleth: http://leafletjs.com/examples/choropleth/
+			Mapbox turorials: https://www.mapbox.com/help/tutorials/
+			Mapbox style: https://www.mapbox.com/api-documentation/#maps
+    -->
+  
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+
+    <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
+
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    
+    <!-- specify the contry input geojson file -->
+    <script src="data/th_geo.js"></script>
+
+</head>
+
+<body>
+    <div id="menu">
+        <table>
+            <tr>
+                <td>
+                    <b>Select Variable &nbsp;</b>
+                    <select id="selectTarget" onchange="targetChange()">
+                   <!-- Configuration Parameters - START-->
+                   <!--value=display label,varname,max,min,round nearest -3(1000) -2(100)-->
+                   
+                   <option selected value="Population,total_pop,98000,500,-3">Population</option>
+                   <option value="Income,avg_income,9917,1024,-2">Average Income</option>
+                   
+                   <!-- Configuration Parameters - END-->
+               </select>
+                </td>
+                <td>
+                    <b>Select Theme &nbsp;</b>
+                    <select id="selectTheme" onchange="themeChange()">
+                   <option selected value="colors_RdPu">Sequential PuRd</option>
+                   <option value="colors_BuGn">Sequential GnBu</option>
+                   <option value="colors_YlOrRd">Sequential YlOrRd</option>
+                   <option value="colors_YlGn">Sequential YlGn</option>
+                   <option value="colors_BuPu">Sequential BuPu</option>
+                   <option value="colors_BrBG">Diverging BrBG</option>
+                   <option value="colors_RdBu">Diverging RdBu</option>
+                   <option value="colors_RdYlGn">Diverging RdYlGn</option>
+                   <option value="colors_PiYG">Diverging PiYG</option>
+                   <option value="colors_RdGy">Diverging RdGy</option>
+               </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id='map'></div>
+    
+    <script type="text/javascript">
+        var topRightTitle = "Map Visualization - Thailand";
+        var countryLatLong = [13.736717, 100.523186];
+        var zoomLevel = 6;
+        
+    </script>
+
+    <script type="text/javascript" src="script/setup_part_1.js"></script>
+
+    <script type="text/javascript">
+        //*************************************
+        //	Leaflet Control - info
+        //	:Show information when hover inside zone 
+        //*************************************
+        var info = L.control();
+        info.onAdd = function(map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+        info.update = function(props) {
+            this._div.innerHTML = '<h4>' + topRightTitle + '</h4>' +
+                (props ? '<b>' + props.name + '</b><br/>' +
+                    //***********************************
+                    // Addional data goes here, with plus sign at the end, 
+                    // EXCEPT for the last element before HOVER
+                    //***********************************
+                    '&nbsp;&nbsp;' + 'Population' + ' ' + props['total_pop'].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '<br/>' +
+                    '&nbsp;&nbsp;' + 'Average Income ' + props['avg_income'].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '<br/>' +
+                    '&nbsp;&nbsp;' + 'Market Penetration ' + props['mkt_penlt'].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + '<br/>'
+
+
+                    :
+                    'Hover over a zone');
+        };
+        info.addTo(map);
+    </script>>
+
+    <script type="text/javascript" src="script/setup_part_2.js"></script>
+
+    <script type="text/javascript">
+        //*************************************
+        //	Leaflet Control - markers
+        //	: popup/marker 
+        //*************************************/
+        
+        function zoneOnEachFeature(feature, layer) {
+            layer.bindPopup('<b>Popup onClick Map : Addiotnal Info</b><br>'+feature.info.name);
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
+
+        }
+
+                
+        var markericon_1 = L.marker([13.7563 , 100.5018]).addTo(map);
+        markericon_1.bindPopup("<b>Popup onClick Icon Bangkok</b><br>Additional info - specofic to this marker/icon");
+
+
+        
+        //*************************************
+        //	FINAL
+        //	:load data onto map, 
+        //	make sure the defined var in .js file 
+        //	is the same as the first parameter of geoJson
+        //*************************************
+        countryLayer = L.geoJson(locationId, {
+            style: zoneStyle,
+            onEachFeature: zoneOnEachFeature
+        }).addTo(map);
+        map.fitBounds(countryLayer.getBounds());
+
+        
+
+    </script>
+</body>
+
+</html>

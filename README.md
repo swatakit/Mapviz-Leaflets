@@ -1,6 +1,7 @@
 # Geography Visualization with Javascript - leaflets and mapbox
 
-Ready-to-use geo visualization tool. You are welcome to utilise the tool with other country geojson files 
+Ready-to-use geo visualization tool. You are welcome to utilize the tool with other country geojson files.
+Please see the instruction in the provided jupyter botebook
 
 ### Requirements
 

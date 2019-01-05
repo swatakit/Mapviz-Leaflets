@@ -13,7 +13,7 @@ Python 3.X for geojson file creation
 
 ## Credits
 * Apisit Toompakdee : https://github.com/apisit
-* Leo Liu(Jianna) 
+* Jianna(Leo) Liu 
 
 ## License
 
